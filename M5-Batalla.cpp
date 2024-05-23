@@ -1,4 +1,3 @@
-#include "Boss.h"
 #include "Personaje.h"
 
 #include <iostream>

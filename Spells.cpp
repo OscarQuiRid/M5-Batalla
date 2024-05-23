@@ -44,6 +44,11 @@ int Spells::getSpell2()
 Spells::Spells() {
 
 }
+Spells::Spells(string pSpellName1, int pSpell1)
+{
+	spellName = pSpellName1;
+	spell = pSpell1;
+}
 Spells::Spells(string pSpellName1, int pSpell1, string pSpellName2, int pSpell2)
 {
 	spellName = pSpellName1;

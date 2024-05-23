@@ -24,5 +24,6 @@ public:
 
 
 	Spells();
+	Spells(string pSpellName1, int pSpell1);
 	Spells(string pSpellName1, int pSpell1, string pSpellName2, int pSpell2);
 };

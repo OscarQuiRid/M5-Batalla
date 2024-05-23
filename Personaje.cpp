@@ -11,8 +11,7 @@ Personaje::Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int
 	posicionY = pPosicionY;
 }
 
-Personaje::Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int pPosicionY, string pSpellName1, int pSpell1, string pSpellName2, int pSpell2) : Spells(pSpellName1, pSpell1, pSpellName2, pSpell2)
-{
+Personaje::Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int pPosicionY, string pSpellName1, int pSpell1, string pSpellName2, int pSpell2) : Spells(pSpellName1, pSpell1, pSpellName2, pSpell2){
 	vida = pVida;
 	ataque = pAtaque;
 	nombre = pNombre;
