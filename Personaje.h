@@ -1,9 +1,10 @@
 #pragma once
+#include "Spells.h"
 
 #include <iostream>
 using namespace std;
 
-class Personaje
+class Personaje : public Spells
 {
 private:
 	int vida;
@@ -27,4 +28,6 @@ public:
 
 	Personaje();
 	Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int pPosicionY);
+	Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int pPosicionY, string pSpellName1, int pSpell1, string pSpellName2, int pSpell2);
+
 };
