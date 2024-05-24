@@ -2,7 +2,9 @@
 #include <iostream>
 
 using namespace std;
+Personaje::Personaje() {
 
+}
 Personaje::Personaje(int pVida, int pAtaque, string pNombre, int pPosicionX, int pPosicionY) {
 	vida = pVida;
 	ataque = pAtaque;
