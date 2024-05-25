@@ -6,7 +6,7 @@
 class Logica {
 public:
     static Spells spell1, spell2, spell3, spell4;
-    static Personaje mapa[10][5], player, enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, boss, reutilizable;
+    static Personaje mapa[10][5], mapaPrint[10][5], player, enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, boss, reutilizable, vacio;
     static bool map[10][5];
 
     static void createSpells();
@@ -16,5 +16,6 @@ public:
     static int asignarPosicionY(int& y);
     static void createMapInicial();
     static void printarMapa();
-    static void saludo();
+    static void pelea();
+    static void procesarFlecha(int key);
 };

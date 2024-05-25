@@ -1,23 +1,43 @@
 #include "Logica.h"
 #include <iostream>
+#include <conio.h>
 
 using namespace std;
 
-// no printa nombres revisar por que, si es por que no se esta accediendo correctamente a la memoria royo ememy1.getnombre() si asi buscar como relacionar o saltarse el random y meter los enemigos a mano igual que ize con el player y el boss
 
+// para hacer el loot hay que hacer un Loot.h crear las variables ahi, hacer un constructor para cada item (string nombre, int ataque, int defensa), una variable equipo ejemplo equipoHelmet etc que sera 
+//      equipoHelmet = botinHelmet; con armor legs botas shield y sword suma de todos los .getatake y .getdefensa y eso se suma a los stats del personaje.
+//
+//
 
-
-// el juego apareceras en posicion [0][3] y te moveras en las [1][2],[1][3],[1][4]
-// posicion 0 es la salida, posicion 1 al 8 son monstruos y la 9 es el boss
 int main() {
-    cout << "\ninicio\n";
+    srand(time(NULL));
+    string apodo;
+
     Logica::createSpells();
-    cout << "\nentre spells y enemis\n";
     Logica::createEnemis();
-    cout << "\nentre enemigos y mapa\n";
     Logica::createMapInicial();
-    cout << "\nentre mapa y printar mapa\n";
-    Logica::printarMapa();
-    cout << "\nantessaludo\n";
-    Logica::saludo();
+
+    cout << "\n\n";                 // borrar
+
+    cout << "Introduce tu nombre: ";
+    cin >> apodo;
+    Logica::player.setNombre(apodo);
+    cout << "Hola, " << Logica::player.getNombre() << "! Bienvenido al juego." << endl;
+
+    cout << "Presiona flechas para desplazarte por el mapa o Presiona tecla ESC para salir \n";
+
+    bool juego = true;
+    while (juego = true) {
+        if (_kbhit()) {
+            int tecla = _getch();
+            if (tecla == 27) {
+                break;
+            }
+            if (tecla == 224) {
+                tecla = _getch();
+                Logica::procesarFlecha(tecla);
+            }
+        }
+    }
 }
