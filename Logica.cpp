@@ -6,7 +6,7 @@
 using namespace std;
 // x altura, Y ancho
 // falta ponerle magias al boss creando una funcion para asignarlas con un rand y un constructor o un set spell
-Spells Logica::spell1, Logica::spell2, Logica::spell3, Logica::spell4;
+Spells Logica::spell1, Logica::spell2, Logica::spell3, Logica::spell4, Logica::reusable1, Logica::reusable2;
 Personaje Logica::mapa[10][5], Logica::player, Logica::enemy1, Logica::enemy2, Logica::enemy3, Logica::enemy4, Logica::enemy5, Logica::enemy6, Logica::enemy7, Logica::enemy8, Logica::boss, Logica::reutilizable, Logica::vacio;
 bool Logica::map[10][5];
 
@@ -16,8 +16,31 @@ void Logica::createSpells() {
 	spell3 = Spells("Exori Tera", 50);
 	spell4 = Spells("Exori Flam", 50);
 }
+void Logica::crateBoss(Spells& spellUnos) {
+	int randomNumber = rand() % 4 + 1;
+	switch (randomNumber)
+	{
+	case 1:
+		spellUnos = spell1;
+		break;
+	case 2:
+		spellUnos = spell2;
+		break;
+	case 3:
+		spellUnos = spell3;
+		break;
+	case 4:
+		spellUnos = spell4;
+		break;
+	default:
+		break;
+	}
+
+}
 void Logica::createEnemis() {
-	player = Personaje(500, 15, "", 0, 0);
+	crateBoss(reusable1);
+	crateBoss(reusable2);
+	player = Personaje(1400, 15, "", 0, 0);
 	enemy1 = Personaje(100, 10, "Orc", 0, 0);
 	enemy2 = Personaje(100, 10, "Troll", 0, 0);
 	enemy3 = Personaje(100, 10, "Bear", 0, 0);
@@ -26,7 +49,7 @@ void Logica::createEnemis() {
 	enemy6 = Personaje(100, 10, "Mutated Human", 0, 0);
 	enemy7 = Personaje(100, 10, "Cyclop", 0, 0);
 	enemy8 = Personaje(100, 10, "Gargole", 0, 0);
-	boss = Personaje(500, 15, "Demon", 0, 0);
+	boss = Personaje(500, 15, "Demon", 0, 0, reusable1.getSpellName(), reusable1.getSpell(), reusable2.getSpellName(), reusable2.getSpell());
 }
 Personaje Logica::generateMonster(Personaje pEnemigo) {
 	int randomNumber = rand() % 8 + 1;
@@ -77,7 +100,6 @@ void Logica::createMapInicial() {
 	player.setPosicionY(0);
 	player.setPosicionX(0);
 	mapa[0][0] = player;
-	map[0][0] = true;
 
 	int x = asignarPosicionX(x);
 	boss.setPosicionY(9);
@@ -94,22 +116,82 @@ void Logica::createMapInicial() {
 		map[i][x] = true;
 	}
 }
-void Logica::pelea() {
-	bool enemigoEncontrado = false;
-
-	int posY = player.getPosicionY();
-	int posX = player.getPosicionX();
-
-	if (mapa[posY][posX].getNombre() != "" && mapa[posY][posX].getNombre() != "player") {
-		cout << "¡Comienza la batalla con " << mapa[posY][posX].getNombre() << "!" << endl;
-		enemigoEncontrado = true;
+void Logica::hits(int& valorAtaque, bool esBoss, bool esPlayer, int posY, int posX)
+{
+	if (esPlayer) {
+		valorAtaque = rand() % player.getAtaque() + 1;
 	}
+	else if (esBoss) {
+		int spell = rand() % 100 + 1;
+		if (spell <= 10) {
+			valorAtaque = rand() % boss.getSpell() + 1;
+			cout << boss.getNombre() << " a lanzado la magia " << boss.getSpellName() << "\n";
+		}
+		else if (spell >= 11 && spell <= 20) {
 
-	if (!enemigoEncontrado) {
-		cout << "No hay enemigos en esta posición." << endl;
+			valorAtaque = rand() % boss.getSpell2() + 1;
+			cout << boss.getNombre() << " a lanzado la magia " << boss.getSpellName2() << "\n";
+		}
+		else
+		{
+			valorAtaque = rand() % boss.getAtaque() + 1;
+		}
+	}
+	else {
+		valorAtaque = rand() % mapa[posY][posX].getAtaque() + 1;
 	}
 }
-void Logica::procesarFlecha(int key) {
+void Logica::pelea(int posY, int posX, bool& salirJuego) {
+	bool esPlayer, esBoss = mapa[posY][posX].getNombre() == "Demon";
+	int valorAtaque = 0;
+
+	if (mapa[posY][posX].getNombre() != "" && mapa[posY][posX].getNombre() != "player") {
+		cout << "Tu presencia a enfurecido a " << mapa[posY][posX].getNombre() << "!\n";
+		while (player.getVida() > 0 && mapa[posY][posX].getVida() > 0) {
+			esPlayer = true;
+			valorAtaque = player.getAtaque();
+			hits(valorAtaque, esBoss, esPlayer, posY, posX);
+			mapa[posY][posX].setVida(mapa[posY][posX].getVida() - valorAtaque);
+			if (mapa[posY][posX].getVida() <= 0) {
+				mapa[posY][posX].setVida(0);
+				cout << mapa[posY][posX].getNombre() << " a recivido " << valorAtaque << " de un golpe, le queda " << mapa[posY][posX].getVida() << " de vida.\n";
+				cout << "El enemigo " << mapa[posY][posX].getNombre() << " ha muerto.\n";
+				mapa[posY][posX] = Personaje();
+				map[posY][posX] = false;
+				break;
+			}
+			else if (valorAtaque == 0)
+			{
+				cout << player.getNombre() << " ha fallado el ataque.\n";
+			}
+			else
+			{
+				cout << mapa[posY][posX].getNombre() << " a recivido " << valorAtaque << " de un golpe, le queda " << mapa[posY][posX].getVida() << " de vida.\n";
+			}
+			revisarEnemigos(salirJuego);
+			esPlayer = false;
+			valorAtaque = mapa[posY][posX].getAtaque();
+			hits(valorAtaque, esBoss, esPlayer, posY, posX);
+			player.setVida(player.getVida() - valorAtaque);
+			if (player.getVida() <= 0) {
+				player.setVida(0);
+				cout << player.getNombre() << " ha recibido " << valorAtaque << " de un golpe, le queda " << player.getVida() << " de vida.\n";
+				cout << "You are Dead!\n";
+				salirJuego = false;
+				break;
+			}
+			else if (valorAtaque == 0)
+			{
+				cout << mapa[posY][posX].getNombre() << " ha fallado el ataque.\n";
+			}
+			else
+			{
+				cout << player.getNombre() << " ha recibido " << valorAtaque << " de un golpe, le queda " << player.getVida() << " de vida.\n";
+			}
+		}
+	}
+}
+void Logica::procesarFlecha(int key, bool& salirJuego) {
 	int nuevaX = player.getPosicionX();
 	int nuevaY = player.getPosicionY();
 
@@ -155,17 +237,16 @@ void Logica::procesarFlecha(int key) {
 		break;
 	}
 	if (mapa[nuevaY][nuevaX].getNombre() != "" && mapa[nuevaY][nuevaX].getNombre() != "player") {
-		cout << "Te topaste con " << mapa[nuevaY][nuevaX].getNombre() << "!" << endl;
-		// logica para la batalla
+		cout << "Te topaste con " << mapa[nuevaY][nuevaX].getNombre() << "!\n";
+		pelea(nuevaY, nuevaX, salirJuego);
 	}
 	else {
 		mapa[player.getPosicionY()][player.getPosicionX()] = Personaje();
 		player.setPosicionX(nuevaX);
 		player.setPosicionY(nuevaY);
 		mapa[player.getPosicionY()][player.getPosicionX()] = player;
-
 		printarMapa();
-		cout << "\n\n";
+		cout << "\n\n\n";
 	}
 }
 void Logica::printarMapa() {
@@ -186,5 +267,19 @@ void Logica::printarMapa() {
 			}
 		}
 		cout << "\n";
+	}
+}
+void Logica::revisarEnemigos(bool& salirJuego) {
+	int enemigosRestantes = 0;
+	for (int i = 0; i < 10; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			if (map[i][j] == true) {
+				enemigosRestantes++;
+			}
+		}
+	}
+	if (enemigosRestantes == 0) {
+		cout << "Felizidades has limpiado toda la cueva! \n";
+		salirJuego = false;
 	}
 }
