@@ -128,7 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Logica.cpp" />
-    <ClCompile Include="LogicaJuego.cpp" />
     <ClCompile Include="M5-Batalla.cpp" />
     <ClCompile Include="Personaje.cpp" />
     <ClCompile Include="Spells.cpp" />

@@ -20,8 +20,6 @@ int main() {
     Logica::createEnemis();
     Logica::createMapInicial();
 
-    cout << "\n\n";                 // borrar
-
     cout << "Introduce tu nombre: ";
     cin >> apodo;
     Logica::player.setNombre(apodo);

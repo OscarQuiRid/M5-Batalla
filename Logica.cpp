@@ -257,11 +257,11 @@ void Logica::printarMapa() {
 			if (player.getPosicionY() == i && player.getPosicionX() == j) {
 				cout << "[P]";
 			}
-			else if (map[i][j])		// ocultar
-			{
-				reutilizable = mapa[i][j];
-				cout << "[" << reutilizable.getNombre() << "]";
-			}
+			//else if (map[i][j])		// ocultar
+			//{
+			//	reutilizable = mapa[i][j];
+			//	cout << "[" << reutilizable.getNombre() << "]";
+			//}
 			else {
 				cout << "[ ]";
 			}
